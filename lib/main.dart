@@ -1,4 +1,3 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,42 +18,55 @@ class GoInfoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'GoInfo',
-      theme: ThemeData(primarySwatch: Colors.green),
-      // This "StreamBuilder" listens to login state automatically
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // User is Logged In -> Show Home (We will build this next)
-            return const HomeScreen(); 
-          }
-          // User is Logged Out -> Show Login
-          return const LoginScreen();
-        },
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        // 1. Enable Modern Design (Material 3)
+        useMaterial3: true,
+
+        // 2. AUI Colors
+        primaryColor: const Color(0xFF00573F), // AUI Green
+        scaffoldBackgroundColor: const Color(0xFFF5F7FA), // Light Grey
+        
+        // 3. Color Scheme
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF00573F),
+          primary: const Color(0xFF00573F),
+          secondary: const Color(0xFFFFC72C), // Gold
+        ),
+
+        // 4. Input Fields Styling (Safe to keep)
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+        ),
       ),
+      home: const AuthWrapper(),
     );
   }
 }
 
-// Temporary Placeholder until we build the real Home Screen in the next step
-class HomeScreenPlaceholder extends StatelessWidget {
-  const HomeScreenPlaceholder({super.key});
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Home")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Welcome! You are logged in."),
-            ElevatedButton(
-              onPressed: () => FirebaseAuth.instance.signOut(),
-              child: const Text("Logout"),
-            )
-          ],
-        ),
-      ),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          // Check verification
+          if (!snapshot.data!.emailVerified) {
+             FirebaseAuth.instance.signOut();
+             return const LoginScreen(); 
+          }
+          return const HomeScreen();
+        }
+        return const LoginScreen();
+      },
     );
   }
 }
