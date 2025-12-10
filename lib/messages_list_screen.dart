@@ -1,4 +1,4 @@
-// lib/messages_list_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,7 +17,7 @@ class MessagesListScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        // Query: Find chats where 'participants' array contains my ID
+
         stream: FirebaseFirestore.instance
             .collection('chats')
             .where('participants', arrayContains: myId)
@@ -46,11 +46,11 @@ class MessagesListScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final data = chats[index].data() as Map<String, dynamic>;
               
-              // Determine who the "Other" person is
+
               final List participants = data['participants'];
               final List emails = data['emails'];
               
-              // Find the index that is NOT me
+
               int otherIndex = participants[0] == myId ? 1 : 0;
               String otherUserId = participants[otherIndex];
               String otherUserEmail = emails[otherIndex];

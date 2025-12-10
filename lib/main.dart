@@ -20,21 +20,21 @@ class GoInfoApp extends StatelessWidget {
       title: 'GoInfo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // 1. Enable Modern Design (Material 3)
+
         useMaterial3: true,
 
-        // 2. AUI Colors
+
         primaryColor: const Color(0xFF00573F), // AUI Green
         scaffoldBackgroundColor: const Color(0xFFF5F7FA), // Light Grey
         
-        // 3. Color Scheme
+
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF00573F),
           primary: const Color(0xFF00573F),
           secondary: const Color(0xFFFFC72C), // Gold
         ),
 
-        // 4. Input Fields Styling (Safe to keep)
+
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.white,
@@ -58,7 +58,7 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          // Check verification
+
           if (!snapshot.data!.emailVerified) {
              FirebaseAuth.instance.signOut();
              return const LoginScreen(); 

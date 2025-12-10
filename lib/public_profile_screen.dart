@@ -1,4 +1,4 @@
-// lib/public_profile_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -61,7 +61,7 @@ class PublicProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
 
-                // MESSAGE BUTTON
+
                 if (!isMe) // Don't show button if it's my own profile
                   SizedBox(
                     width: double.infinity,

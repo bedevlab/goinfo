@@ -1,7 +1,7 @@
-// lib/logic/reward_system.dart
+
 
 class RewardSystem {
-  // Logic: Check if user can afford to post
+
   bool canUserPost(int currentBalance, int cost) {
     if (currentBalance >= cost) {
       return true; // Allowed
@@ -10,7 +10,7 @@ class RewardSystem {
     }
   }
 
-  // Logic: Calculate new balance after posting
+
   int calculateRemainingBalance(int currentBalance, int cost) {
     return currentBalance - cost;
   }

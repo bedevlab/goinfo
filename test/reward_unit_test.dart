@@ -25,19 +25,19 @@ void main() {
       
       bool result = rewardSystem.canUserPost(balance, cost);
 
-      // Assert
+
       expect(result, false);
     });
 
     test('Balance calculation should be correct', () {
-       // Arrange
+
       int balance = 50;
       int cost = 5;
 
-      // Act
+
       int newBalance = rewardSystem.calculateRemainingBalance(balance, cost);
 
-      // Assert
+
       expect(newBalance, 45);
     });
   });

@@ -1,4 +1,4 @@
-// lib/chat_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,8 +21,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Generate a unique Chat ID that is always the same for these two users
-    // We sort them alphabetically or by hash so "A_B" is the same as "B_A"
+
+
     if (currentUserId.compareTo(widget.otherUserId) < 0) {
       chatId = "${currentUserId}_${widget.otherUserId}";
     } else {

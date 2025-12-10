@@ -12,7 +12,7 @@ class NotificationsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Notifications")),
       body: StreamBuilder<QuerySnapshot>(
-        // Query: Get notifications where I am the recipient
+
         stream: FirebaseFirestore.instance
             .collection('notifications')
             .where('recipientId', isEqualTo: myId)

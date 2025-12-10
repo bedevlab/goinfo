@@ -1,4 +1,4 @@
-// lib/create_post_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +15,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   final _bodyController = TextEditingController();
   bool _isLoading = false;
 
-  // REWARD LOGIC: Cost to post a question
+
   final int postCost = 5;
 
   Future<void> _submitPost() async {
@@ -23,7 +23,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    // 1. Check User Balance First
+
     final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
     final currentBalance = userDoc.data()?['balance'] ?? 0;
 
@@ -36,10 +36,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
 
     try {
-      // 2. Perform the Transaction (Add Post + Deduct Points + Record History)
+
       final batch = FirebaseFirestore.instance.batch();
 
-      // A. Create the Post reference
+
       final newPostRef = FirebaseFirestore.instance.collection('posts').doc();
       batch.set(newPostRef, {
         'title': _titleController.text.trim(),
@@ -51,13 +51,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
-      // B. Deduct Points from User
+
       final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
       batch.update(userRef, {
         'balance': FieldValue.increment(-postCost),
       });
 
-      // C. Create Transaction Record
       final transactionRef = userRef.collection('transactions').doc();
       batch.set(transactionRef, {
         'amount': -postCost,
@@ -65,7 +64,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
-      // Commit changes
+
       await batch.commit();
 
       if (mounted) Navigator.pop(context); // Go back to Home
@@ -88,7 +87,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // INFO CARD (Cost Warning)
+
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -111,7 +110,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
             const SizedBox(height: 25),
 
-            // INPUTS
+            
             const Text("Title", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             const SizedBox(height: 8),
             TextField(
@@ -135,7 +134,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
             const SizedBox(height: 30),
 
-            // SUBMIT BUTTON
+          
             _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : SizedBox(

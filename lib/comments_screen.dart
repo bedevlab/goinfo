@@ -24,7 +24,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
     final postRef = FirebaseFirestore.instance.collection('posts').doc(widget.postId);
     final batch = FirebaseFirestore.instance.batch();
 
-    // 1. Add Comment
+
     final newCommentRef = postRef.collection('comments').doc();
     batch.set(newCommentRef, {
       'text': text,
@@ -33,13 +33,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
       'timestamp': FieldValue.serverTimestamp(),
     });
 
-    // 2. Increment Comment Count (Fixing your issue)
-    // We use SetOptions(merge: true) to create the field if it doesn't exist
+
+
     batch.set(postRef, {
       'commentCount': FieldValue.increment(1)
     }, SetOptions(merge: true));
 
-    // 3. Send Notification (Only if I am not commenting on my own post)
+
     if (user.uid != widget.postOwnerId) {
       final notifRef = FirebaseFirestore.instance.collection('notifications').doc();
       batch.set(notifRef, {

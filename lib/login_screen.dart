@@ -21,13 +21,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     _tabController = TabController(length: 2, vsync: this);
   }
 
-  // --- LOGIC: REGISTER ---
+
   Future<void> _register() async {
     setState(() => _isLoading = true);
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    // 1. Strict AUI Email Check
+
     if (!email.endsWith('@aui.ma')) {
       _showError("Access Denied: Please use your @aui.ma email.");
       setState(() => _isLoading = false);
@@ -35,16 +35,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     }
 
     try {
-      // 2. Create Account
+
       UserCredential cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // 3. Send Verification Email
+
       await cred.user!.sendEmailVerification();
 
-      // 4. Create Database Entry
+
       await FirebaseFirestore.instance.collection('users').doc(cred.user!.uid).set({
         'email': email,
         'balance': 50,
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         'joinedAt': FieldValue.serverTimestamp(),
       });
 
-      // ADD THIS: Record the Welcome Bonus
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(cred.user!.uid)
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             'timestamp': FieldValue.serverTimestamp(),
           });
 
-      // 5. Alert User and Logout
+
       await FirebaseAuth.instance.signOut();
       _showSuccess("Account created! We sent a verification link to your email. Please verify before logging in.");
       _tabController.animateTo(0); // Switch to Login tab
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     setState(() => _isLoading = false);
   }
 
-  // --- LOGIC: LOGIN ---
+
   Future<void> _login() async {
     setState(() => _isLoading = true);
     try {
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         password: _passwordController.text.trim(),
       );
 
-      // 1. Check if Email is Verified
+
       if (!cred.user!.emailVerified) {
         await FirebaseAuth.instance.signOut();
         _showError("Email not verified! Please check your inbox.");
@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         return;
       }
       
-      // If verified, Main.dart handles the redirect to Home
+
     } catch (e) {
       _showError("Login failed. Check your email or password.");
     }
@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Logo Area
+
               const Icon(Icons.school, size: 80, color: Colors.white),
               const SizedBox(height: 10),
               const Text(
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               ),
               const SizedBox(height: 30),
 
-              // The White Card
+
               Container(
                 width: 350,
                 padding: const EdgeInsets.all(20),

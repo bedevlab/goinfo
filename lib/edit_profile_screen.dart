@@ -1,4 +1,4 @@
-// lib/edit_profile_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +22,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _loadUserData();
   }
 
-  // 1. Load existing data from database
+
   Future<void> _loadUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -40,7 +40,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  // 2. Save updates to database
+
   Future<void> _saveProfile() async {
     setState(() => _isLoading = true);
     final user = FirebaseAuth.instance.currentUser;
@@ -74,7 +74,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  // Avatar Placeholder
+
                   const CircleAvatar(
                     radius: 50,
                     backgroundColor: Color(0xFF00573F),
@@ -82,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Form Fields
+
                   TextField(
                     controller: _nameController,
                     decoration: const InputDecoration(
@@ -109,7 +109,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Save Button
+
                   SizedBox(
                     width: double.infinity,
                     height: 50,

@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // 0=Feed, 1=Messages, 2=Profile
 
-  // --- LOGIC: DELETE POST ---
+
   void _deletePost(String postId) async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -37,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (confirm == true) {
-      // Optional: Delete comments subcollection here via Cloud Function in a real app
-      // For MVP, just deleting the post document is enough to hide it.
+
+
       await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Post deleted.")));
@@ -46,19 +46,19 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // --- LOGIC: LIKE POST & NOTIFY ---
+
   void _toggleLike(String postId, List<dynamic> likes, String postOwnerId) {
     final user = FirebaseAuth.instance.currentUser!;
     final ref = FirebaseFirestore.instance.collection('posts').doc(postId);
 
     if (likes.contains(user.uid)) {
-      // Unlike
+
       ref.update({'likes': FieldValue.arrayRemove([user.uid])});
     } else {
-      // Like
+
       ref.update({'likes': FieldValue.arrayUnion([user.uid])});
 
-      // Send Notification (Only if I am not liking my own post)
+
       if (user.uid != postOwnerId) {
         FirebaseFirestore.instance.collection('notifications').add({
           'recipientId': postOwnerId,
@@ -76,9 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
 
-    // ----------------------
-    // TAB 1: COMMUNITY FEED
-    // ----------------------
+
+
+
     final feedScreen = Scaffold(
       appBar: AppBar(
         title: const Text("Community Feed", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context, snapshot) {
               final balance = (snapshot.data?.data() as Map?)?['balance'] ?? 0;
               
-              // Wrap with InkWell to make it clickable
+
               return InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const BalanceHistoryScreen()));
@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
               final post = postDoc.data() as Map<String, dynamic>;
               final postId = postDoc.id;
               
-              // Extract Data
+
               final List likes = post['likes'] ?? [];
               final bool isLiked = likes.contains(user.uid);
               final int likeCount = likes.length;
@@ -151,10 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // --- HEADER ---
+
                       Row(
                         children: [
-                          // Clickable Profile
+
                           InkWell(
                             onTap: () {
                               Navigator.push(context, MaterialPageRoute(
@@ -182,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           const Spacer(),
-                          // Delete Button (Only visible if I own the post)
+
                           if (isMyPost)
                             IconButton(
                               icon: const Icon(Icons.delete_outline, color: Colors.grey),
@@ -192,24 +192,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 12),
                       
-                      // --- CONTENT ---
+
                       Text(post['title'], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 6),
                       Text(post['body'], style: const TextStyle(color: Colors.black87)),
                       const SizedBox(height: 12),
                       const Divider(),
                       
-                      // --- ACTIONS ---
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          // Like Button
+
                           TextButton.icon(
                             icon: Icon(isLiked ? Icons.thumb_up : Icons.thumb_up_outlined, color: isLiked ? const Color(0xFF00573F) : Colors.grey), 
                             label: Text(likeCount > 0 ? "$likeCount" : "Like", style: TextStyle(color: isLiked ? const Color(0xFF00573F) : Colors.grey)), 
                             onPressed: () => _toggleLike(postId, likes, authorId)
                           ),
-                          // Comment Button (Navigates to CommentsScreen with Owner ID)
+
                           TextButton.icon(
                             icon: const Icon(Icons.comment_outlined, color: Colors.grey), 
                             label: Text(
@@ -237,14 +237,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    // ----------------------
-    // TAB 2: MESSAGES
-    // ----------------------
+
+
+
     const messagesScreen = MessagesListScreen();
 
-    // ----------------------
-    // TAB 3: MY PROFILE
-    // ----------------------
+
+
+
     final profileScreen = Scaffold(
       body: SafeArea(
         child: Column(
@@ -256,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const Text("AUI Student", style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 30),
             
-            // Edit Profile
+
             ListTile(
               leading: const Icon(Icons.edit, color: Color(0xFF00573F)),
               title: const Text("Edit Profile"),
@@ -264,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfileScreen())),
             ),
             
-            // Logout
+
              ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
               title: const Text("Log Out", style: TextStyle(color: Colors.red)),
@@ -275,9 +275,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    // ----------------------
-    // MAIN SCAFFOLD (TABS)
-    // ----------------------
+
+
+
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
